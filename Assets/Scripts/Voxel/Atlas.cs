@@ -12,8 +12,8 @@ namespace Voxel
 
         private Texture2D[] _textures;
 
-        private readonly int _textureWidth = 16;
-        private readonly int _textureHeight = 16;
+        private const int TextureWidth = 16;
+        private const int TextureHeight = 16;
 
         public void GenerateAtlas()
         {
@@ -24,7 +24,7 @@ namespace Voxel
 
             dimensions = GetAtlasDimension(textureCount);
 
-            var atlas = new Texture2D(_textureWidth * dimensions, _textureHeight * dimensions)
+            var atlas = new Texture2D(TextureWidth * dimensions, TextureHeight * dimensions)
             {
                 anisoLevel = 1,
                 filterMode = FilterMode.Point
@@ -33,8 +33,8 @@ namespace Voxel
             for (var i = 0; i < _textures.Length; i++) {
                 var texture = _textures[i];
 
-                var horizontalAtlasOffset = (i % dimensions) * _textureWidth;
-                var verticalAtlasOffset = (i / dimensions) * _textureHeight;
+                var horizontalAtlasOffset = (i % dimensions) * TextureWidth;
+                var verticalAtlasOffset = (i / dimensions) * TextureHeight;
 
                 var textureX = i % dimensions;
                 var textureY = i / dimensions;
