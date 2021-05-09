@@ -226,22 +226,11 @@ namespace Voxel
             chunkMesh.Refresh();
 
             // UPDATE NEIGHBOURS
-            if (localX == 0)
-            {
-                chunkMesh?.leftChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
-            }
-            if (localX == 15)
-            {
-                chunkMesh?.rightChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
-            }
-            if (localZ == 0)
-            {
-                chunkMesh?.frontChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
-            }
-            if (localZ == 15)
-            {
-                chunkMesh?.backChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
-            }
+            if (localX == 0) chunkMesh?.leftChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
+            if (localX == 15) chunkMesh?.rightChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
+            
+            if (localZ == 0) chunkMesh?.frontChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
+            if (localZ == 15) chunkMesh?.backChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
         }
 
         private void LoadBlockData()
