@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ScriptableObjects;
 using UnityEngine;
 using Voxel.Enums;
 using Voxel.JsonObjects;
@@ -7,20 +8,16 @@ namespace Voxel
 {
     public class VoxelHandler : MonoBehaviour
     {
-        public int xChunkCount;
-        public int zChunkCount;
-
-        public int treesPerChunk = 4;
+        public WorldGenerationSettingsSO worldGenerationSettings;
 
         [HideInInspector]
         public GameObject[,] chunks = new GameObject[0, 0];
 
         [HideInInspector]
-        public static VoxelHandler instance = null;
-
-        [HideInInspector]
         public Dictionary<string, Block> blockData;
-    
+        
+        public static VoxelHandler instance = null;
+        
         private Transform _cameraTransform;
         private Transform _playerTransform;
     
@@ -37,20 +34,20 @@ namespace Voxel
         };
 
         [Range(-1f, 1f)]
-        public float cutOffThreshold = 0f;
+        public float cutOffThreshold = 0.5f;
 
-        [Range(2f, 10f)]
+        [Range(2f, 100f)]
         public float cutOffDistance = 4f;
 
-        public void Start()
+        public void Awake()
         {
             if (Camera.main != null) _cameraTransform = Camera.main.transform;
             if (Camera.main != null) _playerTransform = Camera.main.transform.parent.transform;
 
-            VoxelHandler.instance = this;
+            instance = this;
             gameObject.GetComponent<Atlas>().GenerateAtlas();
             LoadBlockData();
-            chunks = new GameObject[xChunkCount, zChunkCount];
+            chunks = new GameObject[worldGenerationSettings.chunkCountX, worldGenerationSettings.chunkCountZ];
 
             for (var x = 0; x < chunks.GetLength(0); x++)
             {
@@ -65,6 +62,7 @@ namespace Voxel
                     var chunkComponent = chunk.AddComponent<Chunk>();
                     chunkComponent.x = x;
                     chunkComponent.z = z;
+                    chunkComponent.AddSettings(worldGenerationSettings);
                     chunkComponent.Generate();
 
                     chunks[x, z] = chunk;
@@ -73,7 +71,7 @@ namespace Voxel
 
             var turnFraction = (1f + Mathf.Sqrt(5)) / 2f;
 
-            var numberOfTrees = xChunkCount * zChunkCount * treesPerChunk;
+            var numberOfTrees = worldGenerationSettings.chunkCountX * worldGenerationSettings.chunkCountZ * worldGenerationSettings.treesPerChunk;
             for (var i = 0; i < numberOfTrees; i++) {
                 var distance = i / (numberOfTrees - 1f);
                 var angle = 2 * Mathf.PI * turnFraction * i;
@@ -151,7 +149,7 @@ namespace Voxel
             var chunkX = x / 16;
             var chunkZ = z / 16;
 
-            if (chunkX > xChunkCount || chunkX < 0 || chunkZ > zChunkCount || chunkZ < 0)
+            if (chunkX > worldGenerationSettings.chunkCountX || chunkX < 0 || chunkZ > worldGenerationSettings.chunkCountZ || chunkZ < 0)
             {
                 return;
             }
@@ -201,7 +199,7 @@ namespace Voxel
             var chunkX = x / 16;
             var chunkZ = z / 16;
 
-            if (chunkX > xChunkCount || chunkX < 0 || chunkZ > zChunkCount || chunkZ < 0)
+            if (chunkX > worldGenerationSettings.chunkCountX || chunkX < 0 || chunkZ > worldGenerationSettings.chunkCountZ || chunkZ < 0)
             {
                 return;
             }
