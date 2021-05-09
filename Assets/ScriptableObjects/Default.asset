@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0224b3a3ec27417cbe38a7b6a18287f6, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: 
-  seed: 0
+  seed: 4113
   factor: 0.07
   islandFactor: 0.0002
   waterLevel: 12
   maxGrassLevel: 18
   snowLevel: 21
+  treesPerChunk: 4
+  chunkCountX: 8
+  chunkCountZ: 8
