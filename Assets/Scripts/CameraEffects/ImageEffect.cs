@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 
-[ExecuteInEditMode]
-public class ImageEffect : MonoBehaviour
+namespace CameraEffects
 {
-    [SerializeField]
-    private Material _effect;
-
-    public void OnRenderImage(RenderTexture src, RenderTexture dst)
+    [ExecuteInEditMode]
+    public class ImageEffect : MonoBehaviour
     {
-        if (_effect == null) return;
-        Graphics.Blit(src, dst, _effect);
+        [SerializeField]
+        private Material _effect;
+
+        public void OnRenderImage(RenderTexture src, RenderTexture dst)
+        {
+            if (_effect == null) return;
+            Graphics.Blit(src, dst, _effect);
+        }
     }
 }

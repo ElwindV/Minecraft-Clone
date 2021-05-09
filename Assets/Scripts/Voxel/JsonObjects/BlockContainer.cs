@@ -1,7 +1,10 @@
 using System;
 
-[Serializable]
-public class BlockContainer
+namespace Voxel.JsonObjects
 {
-    public Block[] blocks;
+    [Serializable]
+    public class BlockContainer
+    {
+        public Block[] blocks;
+    }
 }

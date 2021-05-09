@@ -1,61 +1,63 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Atlas : MonoBehaviour
+namespace Voxel
 {
-    public Material material;
-
-    public static Dictionary<string, Vector2> uvs;
-    public static int dimensions = 0;
-
-    private Texture2D[] _textures;
-
-    private readonly int _textureWidth = 16;
-    private readonly int _textureHeight = 16;
-
-    public void GenerateAtlas()
+    public class Atlas : MonoBehaviour
     {
-        uvs = new Dictionary<string, Vector2>();
-        _textures = Resources.LoadAll<Texture2D>("Atlas");
+        public Material material;
 
-        var textureCount = _textures.Length;
+        public static Dictionary<string, Vector2> uvs;
+        public static int dimensions = 0;
 
-        dimensions = GetAtlasDimension(textureCount);
+        private Texture2D[] _textures;
 
-        var atlas = new Texture2D(_textureWidth * dimensions, _textureHeight * dimensions)
+        private readonly int _textureWidth = 16;
+        private readonly int _textureHeight = 16;
+
+        public void GenerateAtlas()
         {
-            anisoLevel = 1,
-            filterMode = FilterMode.Point
-        };
+            uvs = new Dictionary<string, Vector2>();
+            _textures = Resources.LoadAll<Texture2D>("Atlas");
 
-        for (var i = 0; i < _textures.Length; i++) {
-            var texture = _textures[i];
+            var textureCount = _textures.Length;
 
-            var horizontalAtlasOffset = (i % dimensions) * _textureWidth;
-            var verticalAtlasOffset = (i / dimensions) * _textureHeight;
+            dimensions = GetAtlasDimension(textureCount);
 
-            var textureX = i % dimensions;
-            var textureY = i / dimensions;
-
-            uvs.Add(
-                texture.name,
-                new Vector2((textureX * 1f) / (dimensions * 1f), (textureY * 1f) / (dimensions * 1f))
-            );
-
-            var pixels = texture.GetPixels(0, 0, texture.width, texture.height);
-            for (var y = 0; y < texture.height; y++)
+            var atlas = new Texture2D(_textureWidth * dimensions, _textureHeight * dimensions)
             {
-                for (var x = 0; x < texture.width; x++)
+                anisoLevel = 1,
+                filterMode = FilterMode.Point
+            };
+
+            for (var i = 0; i < _textures.Length; i++) {
+                var texture = _textures[i];
+
+                var horizontalAtlasOffset = (i % dimensions) * _textureWidth;
+                var verticalAtlasOffset = (i / dimensions) * _textureHeight;
+
+                var textureX = i % dimensions;
+                var textureY = i / dimensions;
+
+                uvs.Add(
+                    texture.name,
+                    new Vector2((textureX * 1f) / (dimensions * 1f), (textureY * 1f) / (dimensions * 1f))
+                );
+
+                var pixels = texture.GetPixels(0, 0, texture.width, texture.height);
+                for (var y = 0; y < texture.height; y++)
                 {
-                    atlas.SetPixel(x + horizontalAtlasOffset, y + verticalAtlasOffset, pixels[x + y * 16]);
+                    for (var x = 0; x < texture.width; x++)
+                    {
+                        atlas.SetPixel(x + horizontalAtlasOffset, y + verticalAtlasOffset, pixels[x + y * 16]);
+                    }
                 }
             }
+            atlas.Apply();
+
+            material.mainTexture = atlas;
         }
-        atlas.Apply();
 
-        material.mainTexture = atlas;
+        private static int GetAtlasDimension(int count) => (int)Mathf.Pow(2, Mathf.Ceil(Mathf.Log(count) / Mathf.Log(4)));
     }
-
-    private static int GetAtlasDimension(int count) => (int)Mathf.Pow(2, Mathf.Ceil(Mathf.Log(count) / Mathf.Log(4)));
 }

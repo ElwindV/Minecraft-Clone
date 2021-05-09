@@ -11,23 +11,25 @@ public class UnderwaterShaderController : MonoBehaviour
 
     public float endTransition = 11.5f;
     
-    void Start()
+    private static readonly int ApplyPercentage = Shader.PropertyToID("_ApplyPercentage");
+
+    private void Start()
     {
-        underwaterMaterial.SetFloat("_ApplyPercentage", 0f);
+        underwaterMaterial.SetFloat(ApplyPercentage, 0f);
     }
 
-    void Update()
+    private void Update()
     {
-        float value = 0f;
+        var value = 0f;
         
         if (transform.position.y < startTransition)
         {
-            float v = Mathf.Clamp(transform.position.y, endTransition, startTransition);
+            var v = Mathf.Clamp(transform.position.y, endTransition, startTransition);
             v -= endTransition;
             v /= startTransition - endTransition;
             value = 1f - v;
         }
 
-        underwaterMaterial.SetFloat("_ApplyPercentage", value);
+        underwaterMaterial.SetFloat(ApplyPercentage, value);
     }
 }

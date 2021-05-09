@@ -86,21 +86,6 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 if (i.uv.y > _ApplyPercentage) {
-                    // float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz);
-                    // float3 viewDir = mul((float3x3)unity_CameraToWorld, float3(0,0,1));
-                    
-                    // float light = dot(lightDirection, viewDir);
-                    // light += 1.0;
-                    // light /= 2.0;
-
-                    // float4 projected = mul()
-
-                    // float depth = getDepth(_CameraDepthTexture, i.screenPos, 100);
-
-                    // if (light > 0.9 && depth > 0.999) {
-                    //     return 1;
-                    // }
-
                     float4 col = chromaticAberration(_MainTex, i.uv, _ChromaticAb);
                     return col;
                 }
