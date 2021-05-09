@@ -24,7 +24,17 @@ namespace Voxel
         private Transform _cameraTransform;
         private Transform _playerTransform;
     
-        private Vector3[] _chunkOffsets;
+        private readonly Vector3[] _chunkOffsets = new[]
+        {
+            new Vector3(0f, 0f, 0f),
+            new Vector3(16f, 0f, 0f),
+            new Vector3(0f, 32f, 0f),
+            new Vector3(16f, 32f, 0f),
+            new Vector3(0f, 0f, 16f),
+            new Vector3(16f, 0f, 16f),
+            new Vector3(0f, 32f, 16f),
+            new Vector3(16f, 32f, 16f),
+        };
 
         [Range(-1f, 1f)]
         public float cutOffThreshold = 0f;
@@ -74,7 +84,7 @@ namespace Voxel
                 PlaceTree((int) x, (int) z, false);
             }
 
-            // This loop is seperate since all Meshes should be generated AFTER the chunks
+            // This loop is separate since all Meshes should be generated AFTER the chunks
             for (var x = 0; x < chunks.GetLength(0); x++)
             {
                 for (var z = 0; z < chunks.GetLength(1); z++)
@@ -82,18 +92,6 @@ namespace Voxel
                     var chunkMesh = chunks[x, z].AddComponent<ChunkMesh>();
                 }
             }
-
-            _chunkOffsets = new[]
-            {
-                new Vector3(0f, 0f, 0f),
-                new Vector3(16f, 0f, 0f),
-                new Vector3(0f, 32f, 0f),
-                new Vector3(16f, 32f, 0f),
-                new Vector3(0f, 0f, 16f),
-                new Vector3(16f, 0f, 16f),
-                new Vector3(0f, 32f, 16f),
-                new Vector3(16f, 32f, 16f),
-            };
         }
 
         public void Update()

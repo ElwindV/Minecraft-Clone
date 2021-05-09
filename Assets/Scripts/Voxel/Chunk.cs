@@ -102,67 +102,6 @@ namespace Voxel
                     }
                 }
             }
-
-            // generateCaves();
-        }
-
-        public void generateCaves() 
-        {
-            for (var x = 0; x < 16; x++)
-            {
-                for (var z = 0; z < 16; z++)
-                {
-                    for (var y = 0; y < 32; y++)
-                    {
-                        if (y == 0) {
-                            continue;
-                        }
-
-                        var xComponent = seed + ((transform.position.x + (x * 1f)) * caveFactor);
-                        var yComponent = seed + ((transform.position.z + (z * 1f)) * caveFactor);
-                        var zComponent = seed + ((transform.position.y + (y * 1f)) * caveFactor);
-                        var noiseFactor = Perlin3D(xComponent, yComponent, zComponent);
-
-                        if (noiseFactor < caveCutoff) {
-                            blocks[x, y, z] = (byte) Blocks.Air;
-                        }
-                    }
-                }
-            }
-
-
-        }
-
-        public static float Perlin3D(float x, float y, float z) 
-        {
-            float ab = Mathf.PerlinNoise(x, y);
-            float bc = Mathf.PerlinNoise(y, z);
-            float ac = Mathf.PerlinNoise(x, z);
-
-            float ba = Mathf.PerlinNoise(y, x);
-            float cb = Mathf.PerlinNoise(z, y);
-            float ca = Mathf.PerlinNoise(z, x);
-
-            float abc = ab + bc + ac + ba + cb + ca;
-
-            return abc / 6f;
-        }
-
-        public void DestroyRadius(Vector3 point, float magnitude)
-        {
-            for (int x = 0; x < 16; x++)
-            {
-                for (int z = 0; z < 16; z++)
-                {
-                    for (int y = 0; y < 32; y++)
-                    {
-                        Vector3 blockPosition = new Vector3(x * 1f, y * 1f, z * 1f) + transform.position;
-                        if (Vector3.Distance(point, blockPosition) < magnitude) {
-                            blocks[x, y, z] = (byte)Blocks.Air;
-                        }
-                    }
-                }
-            }
         }
     }
 }
