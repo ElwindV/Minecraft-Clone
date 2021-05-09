@@ -9,8 +9,6 @@
         
         _DistortTex ("Distortion Texture", 2D) = "white" {}
         _DistortAmount ("Distortion Amount", range(0, 0.05)) = 0
-        
-        _ChromaticAb ("Color Shift Amount", range(0, 0.1)) = 0
     }
     SubShader
     {
@@ -81,13 +79,11 @@
             float4 _DistortTex_ST;
             
             float _DistortAmount;
-            float _ChromaticAb;
 
             fixed4 frag (v2f i) : SV_Target
             {
                 if (i.uv.y > _ApplyPercentage) {
-                    float4 col = chromaticAberration(_MainTex, i.uv, _ChromaticAb);
-                    return col;
+                    return tex2D(_MainTex, i.uv);
                 }
                 
                 float2 distortion = tex2D(_DistortTex, i.uv + _Time[1] / 10).xy;
