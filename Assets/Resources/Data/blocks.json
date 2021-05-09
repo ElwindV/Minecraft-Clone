@@ -91,7 +91,7 @@
             }
         },
         {
-            "id": 8,
+            "id": 9,
             "name": "Sand",
             "transparant": false,
             "textures": {
@@ -101,7 +101,7 @@
             }
         },
         {
-            "id": 8,
+            "id": 10,
             "name": "Snow",
             "transparant": false,
             "textures": {
