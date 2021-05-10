@@ -87,7 +87,9 @@ namespace Voxel
             {
                 for (var z = 0; z < chunks.GetLength(1); z++)
                 {
-                    chunks[x, z].AddComponent<ChunkMesh>();
+                    var chunkMesh = chunks[x, z].AddComponent<ChunkMesh>();
+                    chunkMesh.Setup();
+                    chunkMesh.Refresh();
                 }
             }
         }

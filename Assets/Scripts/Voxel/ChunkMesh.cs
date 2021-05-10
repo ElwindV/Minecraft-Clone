@@ -41,13 +41,7 @@ namespace Voxel
         [HideInInspector]
         public Chunk backChunk;
 
-        private void Start()
-        {
-            Setup();
-            Refresh();
-        }
-
-        private void Setup()
+        public void Setup()
         {
             _meshFilter = this.gameObject.AddComponent<MeshFilter>();
             _meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
