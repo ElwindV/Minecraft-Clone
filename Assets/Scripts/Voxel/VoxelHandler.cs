@@ -199,7 +199,17 @@ namespace Voxel
             var chunkX = x / 16;
             var chunkZ = z / 16;
 
-            if (chunkX > worldGenerationSettings.chunkCountX || chunkX < 0 || chunkZ > worldGenerationSettings.chunkCountZ || chunkZ < 0)
+            if (chunkX > worldGenerationSettings.chunkCountX || chunkX < 0)
+            {
+                return;
+            }
+
+            if (chunkZ > worldGenerationSettings.chunkCountZ || chunkZ < 0)
+            {
+                return;
+            }
+            
+            if (y >= 32 || y < 0)
             {
                 return;
             }
