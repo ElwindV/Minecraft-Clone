@@ -153,34 +153,29 @@ namespace Voxel
             {
                 return;
             }
+
+            var isWater = block == Blocks.Water;
+            var size = isWater ? _waterVertexList.Count : _vertexList.Count;
             
-            if (block == Blocks.Water)
+            var directions = GetDirections(side);
+            if (isWater)
             {
-                var waterSize = _waterVertexList.Count;
-            
-                var waterDirections = GetDirections(side);
-                foreach (var direction in waterDirections)
+                foreach (var direction in directions)
                 {
                     _waterVertexList.Add(currentPosition + direction);
                 }
-
-                AddFaceNormals(Vector3.up, true);
-                AddTriangles(waterSize, true);
-                AddUVs(block, Sides.Top, true);
-            
-                return;
             }
-            
-            var size = _vertexList.Count;
-            var directions = GetDirections(side);
-            foreach (var direction in directions)
+            else
             {
-                _vertexList.Add(currentPosition + direction);
+                foreach (var direction in directions)
+                {
+                    _vertexList.Add(currentPosition + direction);
+                }
             }
 
-            AddFaceNormals(normal);
-            AddTriangles(size);
-            AddUVs(block, side);
+            AddFaceNormals(normal, isWater);
+            AddTriangles(size, isWater);
+            AddUVs(block, side, isWater);
         }
         
         private static IEnumerable<Vector3> GetDirections(Sides side)
