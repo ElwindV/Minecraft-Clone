@@ -14,7 +14,7 @@ namespace Voxel
         public GameObject[,] chunks = new GameObject[0, 0];
 
         [HideInInspector]
-        public Dictionary<string, Block> blockData;
+        public Dictionary<string, JsonBlock> blockData;
         
         public static VoxelHandler instance = null;
 
@@ -35,9 +35,9 @@ namespace Voxel
         private void LoadBlockData()
         {
             var jsonFile = Resources.Load<TextAsset>("Data/blocks");
-            var blocksContainer = JsonUtility.FromJson<BlockContainer>(jsonFile.text);
+            var blocksContainer = JsonUtility.FromJson<JsonBlockContainer>(jsonFile.text);
 
-            blockData = new Dictionary<string, Block>();
+            blockData = new Dictionary<string, JsonBlock>();
 
             foreach (var block in blocksContainer.blocks)
             {

@@ -3,7 +3,7 @@ using System;
 namespace Voxel.JsonObjects
 {
     [Serializable]
-    public class TextureMap
+    public class JsonTextureMap
     {
         public string top;
         public string side;

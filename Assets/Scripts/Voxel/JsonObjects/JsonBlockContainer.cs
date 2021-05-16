@@ -3,8 +3,8 @@ using System;
 namespace Voxel.JsonObjects
 {
     [Serializable]
-    public class BlockContainer
+    public class JsonBlockContainer
     {
-        public Block[] blocks;
+        public JsonBlock[] blocks;
     }
 }

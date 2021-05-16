@@ -3,12 +3,12 @@ using System;
 namespace Voxel.JsonObjects
 {
     [Serializable]
-    public class Block
+    public class JsonBlock
     {
         public int id;
         public string name;
         public bool transparent;
 
-        public TextureMap textures;
+        public JsonTextureMap textures;
     }
 }
