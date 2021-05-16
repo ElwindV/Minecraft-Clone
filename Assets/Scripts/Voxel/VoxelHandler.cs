@@ -168,7 +168,7 @@ namespace Voxel
             for (var y = chunkObject.ChunkHeight - 1; y >= 0; y--) {
                 var block = chunkObject.blocks[localX, y, localZ];
 
-                if (block == (byte) Blocks.Grass) {
+                if (block == Blocks.Grass) {
                     root = y + 1;
                 }
             }
@@ -222,7 +222,7 @@ namespace Voxel
             var localZ = z % 16;
 
             // REMOVE BLOCK
-            chunk.GetComponent<Chunk>().blocks[localX, y, localZ] = (byte)block;
+            chunk.GetComponent<Chunk>().blocks[localX, y, localZ] = block;
 
             if (!updateMeshes)
             {

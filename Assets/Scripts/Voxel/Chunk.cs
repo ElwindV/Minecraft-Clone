@@ -9,7 +9,7 @@ namespace Voxel
         private WorldGenerationSettingsSO _settings;
         
         [HideInInspector]
-        public byte[,,] blocks = new byte[16, 32, 16];
+        public Blocks[,,] blocks = new Blocks[16, 32, 16];
 
         public int ChunkWidth => blocks.GetLength(0);
 
@@ -52,50 +52,50 @@ namespace Voxel
                     {
                         if (y == 0)
                         {
-                            blocks[x, y, z] = (byte)Blocks.Bedrock;
+                            blocks[x, y, z] = Blocks.Bedrock;
                             
                             continue;
                         }
                         if (y < stoneLayer)
                         {
-                            blocks[x, y, z] = (byte)Blocks.Stone;
+                            blocks[x, y, z] = Blocks.Stone;
                             
                             continue;
                         }
                         if (y < stoneLayer + 3 && stoneLayer > _settings.waterLevel)
                         {
-                            blocks[x, y, z] = (byte)Blocks.Dirt;
+                            blocks[x, y, z] = Blocks.Dirt;
                             
                             continue;
                         }
                         if (y == 1) {
-                            blocks[x, y, z] = (byte)Blocks.Sand;
+                            blocks[x, y, z] = Blocks.Sand;
                             
                             continue;
                         }
                         if (y < stoneLayer + 4 && y < _settings.waterLevel)
                         {
-                            blocks[x, y, z] = (byte)Blocks.Sand;
+                            blocks[x, y, z] = Blocks.Sand;
                             
                             continue;
                         }
                         if (y < _settings.waterLevel)
                         {
-                            blocks[x, y, z] = (byte)Blocks.Water;
+                            blocks[x, y, z] = Blocks.Water;
                             
                             continue;
                         }
                         if (y < stoneLayer + 4)
                         {
                             blocks[x, y, z] = (y < _settings.maxGrassLevel) 
-                                ? (byte)Blocks.Grass 
+                                ? Blocks.Grass 
                                 : (y > _settings.snowLevel)
-                                    ? (byte)Blocks.Snow
-                                    : (byte)Blocks.Stone;
+                                    ? Blocks.Snow
+                                    : Blocks.Stone;
                             
                             continue;
                         }
-                        blocks[x, y, z] = (byte)Blocks.Air;
+                        blocks[x, y, z] = Blocks.Air;
                     }
                 }
             }

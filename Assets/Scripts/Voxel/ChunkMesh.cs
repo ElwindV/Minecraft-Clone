@@ -100,23 +100,23 @@ namespace Voxel
                         var block = _chunk.blocks[x, y, z];
                         var currentPosition = new Vector3(x, y, z);
 
-                        if (block == (byte)Blocks.Air)
+                        if (block == Blocks.Air)
                         {
                             continue;
                         }
 
                         var rightBlock = ((x + 1 < _chunk.blocks.GetLength(0)) ? _chunk.blocks[x + 1, y, z]
-                            : ((rightChunk != null) ? rightChunk.blocks[0, y, z] : (byte)Blocks.Air));
+                            : ((rightChunk != null) ? rightChunk.blocks[0, y, z] : Blocks.Air));
                         var leftBlock = ((x - 1 >= 0) ? _chunk.blocks[x - 1, y, z]
-                            : ((leftChunk != null) ? leftChunk.blocks[leftChunk.ChunkWidth - 1, y, z] : (byte)Blocks.Air));
+                            : ((leftChunk != null) ? leftChunk.blocks[leftChunk.ChunkWidth - 1, y, z] : Blocks.Air));
 
-                        var topBlock = ((y + 1 < _chunk.blocks.GetLength(1)) ? _chunk.blocks[x, y + 1, z] : (byte)Blocks.Air);
-                        var bottomBlock = ((y - 1 >= 0) ? _chunk.blocks[x, y - 1, z] : (byte)Blocks.Air);
+                        var topBlock = ((y + 1 < _chunk.blocks.GetLength(1)) ? _chunk.blocks[x, y + 1, z] : Blocks.Air);
+                        var bottomBlock = ((y - 1 >= 0) ? _chunk.blocks[x, y - 1, z] : Blocks.Air);
 
                         var backBlock = ((z + 1 < _chunk.blocks.GetLength(2)) ? _chunk.blocks[x, y, z + 1]
-                            : ((backChunk != null) ? backChunk.blocks[x, y, 0] : (byte)Blocks.Air));
+                            : ((backChunk != null) ? backChunk.blocks[x, y, 0] : Blocks.Air));
                         var frontBlock = ((z - 1 >= 0) ? _chunk.blocks[x, y, z - 1]
-                            : ((frontChunk != null) ? frontChunk.blocks[x, y, frontChunk.ChunkDepth - 1] : (byte)Blocks.Air));
+                            : ((frontChunk != null) ? frontChunk.blocks[x, y, frontChunk.ChunkDepth - 1] : Blocks.Air));
 
                         HandleRight(ref block, ref rightBlock, ref currentPosition);
                         HandleLeft(ref block, ref leftBlock, ref currentPosition);
@@ -181,7 +181,7 @@ namespace Voxel
             _triangleList.Add(baseVertexNumber + 3);
         }
 
-        private void AddUVs(byte blockByte, Sides side, bool isWater = false)
+        private void AddUVs(Blocks block, Sides side, bool isWater = false)
         {
             if (isWater)
             {
@@ -193,12 +193,12 @@ namespace Voxel
                 return;
             }
 
-            var block = VoxelHandler.instance.blockData[((Blocks)blockByte).ToString()];
+            var blockData = VoxelHandler.instance.blockData[block.ToString()];
             var texture = (side == Sides.Top)
-                ? block.textures.top
+                ? blockData.textures.top
                 : (side == Sides.Bottom)
-                    ? block.textures.bottom
-                    : block.textures.side;
+                    ? blockData.textures.bottom
+                    : blockData.textures.side;
             var textureStart = Atlas.uvs[texture];
 
             var divider = 1f / (Atlas.dimensions);
@@ -208,17 +208,17 @@ namespace Voxel
             _uvList.Add(textureStart + divider * Vector2.right + divider * Vector2.up);
         }
 
-        private void HandleRight(ref byte blockByte, ref byte rightBlockByte, ref Vector3 currentPosition)
+        private void HandleRight(ref Blocks block, ref Blocks rightBlock, ref Vector3 currentPosition)
         {
-            if (blockByte == (byte) Blocks.Water)
+            if (block ==  Blocks.Water)
             {
                 return;
             }
             
-            var block = VoxelHandler.instance.blockData[((Blocks)blockByte).ToString()];
-            var rightBlock = VoxelHandler.instance.blockData[((Blocks)rightBlockByte).ToString()];
+            var blockData = VoxelHandler.instance.blockData[block.ToString()];
+            var rightBlockData = VoxelHandler.instance.blockData[rightBlock.ToString()];
 
-            var isVisible = !block.transparant && rightBlock.transparant || rightBlockByte == (byte)Blocks.Air;
+            var isVisible = !blockData.transparant && rightBlockData.transparant || rightBlock == Blocks.Air;
 
             if (!isVisible)
             {
@@ -233,20 +233,20 @@ namespace Voxel
 
             AddFaceNormals(Vector3.right);
             AddTriangles(size);
-            AddUVs(blockByte, Sides.Right);
+            AddUVs(block, Sides.Right);
         }
 
-        private void HandleLeft(ref byte blockByte, ref byte leftBlockByte, ref Vector3 currentPosition)
+        private void HandleLeft(ref Blocks block, ref Blocks leftBlock, ref Vector3 currentPosition)
         {
-            if (blockByte == (byte) Blocks.Water)
+            if (block ==  Blocks.Water)
             {
                 return;
             }
             
-            var block = VoxelHandler.instance.blockData[((Blocks)blockByte).ToString()];
-            var leftBlock = VoxelHandler.instance.blockData[((Blocks)leftBlockByte).ToString()];
+            var blockData = VoxelHandler.instance.blockData[block.ToString()];
+            var leftBlockData = VoxelHandler.instance.blockData[leftBlock.ToString()];
 
-            var isVisible = !block.transparant && leftBlock.transparant || leftBlockByte == (byte)Blocks.Air;
+            var isVisible = !blockData.transparant && leftBlockData.transparant || leftBlock == Blocks.Air;
 
             if (!isVisible)
             {
@@ -261,22 +261,22 @@ namespace Voxel
 
             AddFaceNormals(Vector3.left);
             AddTriangles(size);
-            AddUVs(blockByte, Sides.Left);
+            AddUVs(block, Sides.Left);
         }
 
-        private void HandleTop(ref byte blockByte, ref byte topBlockByte, ref Vector3 currentPosition)
+        private void HandleTop(ref Blocks block, ref Blocks topBlock, ref Vector3 currentPosition)
         {
-            var block = VoxelHandler.instance.blockData[((Blocks)blockByte).ToString()];
-            var topBlock = VoxelHandler.instance.blockData[((Blocks)topBlockByte).ToString()];
+            var blockData = VoxelHandler.instance.blockData[block.ToString()];
+            var topBlockData = VoxelHandler.instance.blockData[topBlock.ToString()];
 
-            var isVisible = false || !block.transparant && topBlock.transparant || topBlockByte == (byte)Blocks.Air;
+            var isVisible = false || !blockData.transparant && topBlockData.transparant || topBlock == Blocks.Air;
 
             if (!isVisible)
             {
                 return;
             }
 
-            if (blockByte == (byte) Blocks.Water)
+            if (block ==  Blocks.Water)
             {
                 var waterSize = _waterVertexList.Count;
             
@@ -287,7 +287,7 @@ namespace Voxel
             
                 AddFaceNormals(Vector3.up, true);
                 AddTriangles(waterSize, true);
-                AddUVs(blockByte, Sides.Top, true);
+                AddUVs(block, Sides.Top, true);
             
                 return;
             }
@@ -300,20 +300,20 @@ namespace Voxel
 
             AddFaceNormals(Vector3.up);
             AddTriangles(size);
-            AddUVs(blockByte, Sides.Top);
+            AddUVs(block, Sides.Top);
         }
 
-        private void HandleBottom(ref byte blockByte, ref byte bottomBlockByte, ref Vector3 currentPosition)
+        private void HandleBottom(ref Blocks block, ref Blocks bottomBlock, ref Vector3 currentPosition)
         {
-            if (blockByte == (byte) Blocks.Water)
+            if (block == Blocks.Water)
             {
                 return;
             }
             
-            var block = VoxelHandler.instance.blockData[((Blocks)blockByte).ToString()];
-            var bottomBlock = VoxelHandler.instance.blockData[((Blocks)bottomBlockByte).ToString()];
+            var blockData = VoxelHandler.instance.blockData[block.ToString()];
+            var bottomBlockData = VoxelHandler.instance.blockData[bottomBlock.ToString()];
             
-            var isVisible = !block.transparant && bottomBlock.transparant || bottomBlockByte == (byte)Blocks.Air;
+            var isVisible = !blockData.transparant && bottomBlockData.transparant || bottomBlock == Blocks.Air;
 
             if (!isVisible)
             {
@@ -322,26 +322,26 @@ namespace Voxel
 
             var size = _vertexList.Count;
             _vertexList.Add(currentPosition + Vector3.right);                    // + 0
-            _vertexList.Add(currentPosition);                                          // + 1
+            _vertexList.Add(currentPosition);                                    // + 1
             _vertexList.Add(currentPosition + Vector3.right + Vector3.forward);  // + 2
             _vertexList.Add(currentPosition + Vector3.forward);                  // + 3
 
             AddFaceNormals(Vector3.down);
             AddTriangles(size);
-            AddUVs(blockByte, Sides.Bottom);
+            AddUVs(block, Sides.Bottom);
         }
 
-        private void HandleBack(ref byte blockByte, ref byte backBlockByte, ref Vector3 currentPosition)
+        private void HandleBack(ref Blocks block, ref Blocks backBlock, ref Vector3 currentPosition)
         {
-            if (blockByte == (byte) Blocks.Water)
+            if (block == Blocks.Water)
             {
                 return;
             }
 
-            var block = VoxelHandler.instance.blockData[((Blocks)blockByte).ToString()];
-            var backBlock = VoxelHandler.instance.blockData[((Blocks)backBlockByte).ToString()];
+            var blockData = VoxelHandler.instance.blockData[block.ToString()];
+            var backBlockData = VoxelHandler.instance.blockData[backBlock.ToString()];
 
-            var isVisible = !block.transparant && backBlock.transparant || backBlockByte == (byte)Blocks.Air;
+            var isVisible = !blockData.transparant && backBlockData.transparant || backBlock == Blocks.Air;
             
             if (!isVisible)
             {
@@ -356,20 +356,20 @@ namespace Voxel
 
             AddFaceNormals(Vector3.forward);
             AddTriangles(size);
-            AddUVs(blockByte, Sides.Back);
+            AddUVs(block, Sides.Back);
         }
 
-        private void HandleFront(ref byte blockByte, ref byte frontBlockByte, ref Vector3 currentPosition)
+        private void HandleFront(ref Blocks block, ref Blocks frontBlock, ref Vector3 currentPosition)
         {
-            if (blockByte == (byte) Blocks.Water)
+            if (block == Blocks.Water)
             {
                 return;
             }
             
-            var block = VoxelHandler.instance.blockData[((Blocks)blockByte).ToString()];
-            var frontBlock = VoxelHandler.instance.blockData[((Blocks)frontBlockByte).ToString()];
+            var blockData = VoxelHandler.instance.blockData[block.ToString()];
+            var frontBlockData = VoxelHandler.instance.blockData[frontBlock.ToString()];
 
-            var isVisible = !block.transparant && frontBlock.transparant || frontBlockByte == (byte)Blocks.Air;
+            var isVisible = !blockData.transparant && frontBlockData.transparant || frontBlock == Blocks.Air;
 
             if (!isVisible)
             {
@@ -377,14 +377,14 @@ namespace Voxel
             }
 
             var size = _vertexList.Count;
-            _vertexList.Add(currentPosition);                                                // + 0
+            _vertexList.Add(currentPosition);                                          // + 0
             _vertexList.Add(currentPosition + Vector3.right);                          // + 1
             _vertexList.Add(currentPosition + Vector3.up);                             // + 2
             _vertexList.Add(currentPosition + Vector3.right + Vector3.up);             // + 3
 
             AddFaceNormals(Vector3.back);
             AddTriangles(size);
-            AddUVs(blockByte, Sides.Front);
+            AddUVs(block, Sides.Front);
         }
     }
 }

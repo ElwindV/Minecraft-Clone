@@ -1,7 +1,7 @@
 ﻿
 namespace Voxel.Enums
 {
-    public enum Blocks
+    public enum Blocks : byte
     {
         Air     = 0,
         Stone   = 1,
