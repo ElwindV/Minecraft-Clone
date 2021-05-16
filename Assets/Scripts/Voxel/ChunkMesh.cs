@@ -159,26 +159,21 @@ namespace Voxel
 
         private void AddTriangles(int baseVertexNumber, bool isWater = false)
         {
-            if (isWater)
-            {
-                _waterTriangleList.Add(baseVertexNumber + 0);
-                _waterTriangleList.Add(baseVertexNumber + 3);
-                _waterTriangleList.Add(baseVertexNumber + 1);
-
-                _waterTriangleList.Add(baseVertexNumber + 0);
-                _waterTriangleList.Add(baseVertexNumber + 2);
-                _waterTriangleList.Add(baseVertexNumber + 3);
+            int[] offsets = {0, 3, 1, 0, 2, 3};
             
+            if (isWater) 
+            {
+                foreach (var i in offsets) 
+                {
+                    _waterTriangleList.Add(baseVertexNumber + i);
+                }
+
                 return;
             }
-
-            _triangleList.Add(baseVertexNumber + 0);
-            _triangleList.Add(baseVertexNumber + 3);
-            _triangleList.Add(baseVertexNumber + 1);
-
-            _triangleList.Add(baseVertexNumber + 0);
-            _triangleList.Add(baseVertexNumber + 2);
-            _triangleList.Add(baseVertexNumber + 3);
+            
+            foreach (var i in offsets) {
+                _triangleList.Add(baseVertexNumber + i);
+            }
         }
 
         private void AddUVs(Blocks block, Sides side, bool isWater = false)
