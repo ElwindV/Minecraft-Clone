@@ -184,32 +184,68 @@ namespace Voxel
             {
                 case Sides.Right:
                 {
-                    Vector3[] rightDirections = { Vector3.right, Vector3.right + Vector3.forward, Vector3.right + Vector3.up, Vector3.right + Vector3.forward + Vector3.up } ;
+                    Vector3[] rightDirections =
+                    {
+                        new Vector3(1, 0, 0), 
+                        new Vector3(1, 0 , 1), 
+                        new Vector3(1, 1 , 0), 
+                        new Vector3(1, 1 , 1)
+                    };
                     return rightDirections;
                 }
                 case Sides.Left:
                 {
-                    Vector3[] leftDirections = { Vector3.forward, Vector3.zero, Vector3.forward + Vector3.up, Vector3.up };
+                    Vector3[] leftDirections = 
+                    { 
+                        new Vector3(0, 0, 1), 
+                        new Vector3(0, 0, 0), 
+                        new Vector3(0, 1, 1), 
+                        new Vector3(0, 1, 0)
+                    };
                     return leftDirections;
                 }
                 case Sides.Top:
                 {
-                    Vector3[] topDirections = { Vector3.up, Vector3.up + Vector3.right, Vector3.up + Vector3.forward, Vector3.up + Vector3.right + Vector3.forward};
+                    Vector3[] topDirections = 
+                    { 
+                        new Vector3(0, 1, 0), 
+                        new Vector3(1, 1, 0), 
+                        new Vector3(0, 1, 1), 
+                        new Vector3(1, 1, 1)
+                    };
                     return topDirections;
                 }
                 case Sides.Bottom:
                 {
-                    Vector3[] bottomDirections = { Vector3.right, Vector3.zero, Vector3.right + Vector3.forward, Vector3.forward };
+                    Vector3[] bottomDirections = 
+                    { 
+                        new Vector3(1, 0, 0), 
+                        new Vector3(0, 0, 0), 
+                        new Vector3(1, 0, 1), 
+                        new Vector3(0, 0, 1)
+                    };
                     return bottomDirections;
                 }
                 case Sides.Back:
                 {
-                    Vector3[] backDirections = { Vector3.forward + Vector3.right, Vector3.forward, Vector3.forward + Vector3.right + Vector3.up, Vector3.forward + Vector3.up};
+                    Vector3[] backDirections = 
+                    { 
+                        new Vector3(1, 0, 1), 
+                        new Vector3(0, 0, 1), 
+                        new Vector3(1, 1, 1), 
+                        new Vector3(0, 1, 1)
+                    };
                     return backDirections;
                 }
                 case Sides.Front:
                 {
-                    Vector3[] frontDirections = { Vector3.zero, Vector3.right, Vector3.up, Vector3.right + Vector3.up};
+                    Vector3[] frontDirections = 
+                    { 
+                        new Vector3(0, 0, 0), 
+                        new Vector3(1, 0, 0), 
+                        new Vector3(0, 1, 0), 
+                        new Vector3(1, 1, 0)
+                    };
                     return frontDirections;
                 }
                 default:
