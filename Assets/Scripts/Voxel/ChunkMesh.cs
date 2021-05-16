@@ -8,13 +8,11 @@ namespace Voxel
     public class ChunkMesh : MonoBehaviour
     {
         private MeshFilter _meshFilter;
-        private Mesh _mesh;
         private MeshRenderer _meshRenderer;
         private MeshCollider _meshCollider;
 
         private GameObject _waterObject;
         private MeshFilter _waterMeshFilter;
-        private Mesh _waterMesh;
         private MeshRenderer _waterMeshRenderer;
 
         private Chunk _chunk;
@@ -43,24 +41,24 @@ namespace Voxel
 
         public void Setup()
         {
-            _meshFilter = this.gameObject.AddComponent<MeshFilter>();
-            _meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
-            _meshCollider = this.gameObject.AddComponent<MeshCollider>();
+            _meshFilter = gameObject.AddComponent<MeshFilter>();
+            _meshRenderer = gameObject.AddComponent<MeshRenderer>();
+            _meshCollider = gameObject.AddComponent<MeshCollider>();
 
             _waterObject = new GameObject();
-            _waterObject.transform.parent = this.transform;
+            _waterObject.transform.parent = transform;
             _waterObject.name = "Water";
             _waterObject.transform.localPosition = Vector3.zero;
             _waterMeshFilter = _waterObject.AddComponent<MeshFilter>();
             _waterMeshRenderer = _waterObject.AddComponent<MeshRenderer>();
 
-            _chunk = this.gameObject.GetComponent<Chunk>();
+            _chunk = gameObject.GetComponent<Chunk>();
 
             _material = Resources.Load<Material>("Materials/Voxel");
-            _meshRenderer.sharedMaterial = this._material;
+            _meshRenderer.sharedMaterial = _material;
         
             _waterMaterial = Resources.Load<Material>("Materials/Water");
-            _waterMeshRenderer.sharedMaterial = this._waterMaterial;
+            _waterMeshRenderer.sharedMaterial = _waterMaterial;
 
             leftChunk = (_chunk.x - 1 >= 0)
                 ? VoxelHandler.instance.chunks[_chunk.x - 1, _chunk.z].GetComponent<Chunk>()

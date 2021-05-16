@@ -27,11 +27,8 @@ namespace Voxel
             GenerateChunks();
         }
 
-        private void HandleAtlas()
-        {
-            gameObject.GetComponent<Atlas>().GenerateAtlas();
-        }
-        
+        private void HandleAtlas() => gameObject.GetComponent<Atlas>().GenerateAtlas();
+
         private void LoadBlockData()
         {
             var jsonFile = Resources.Load<TextAsset>("Data/blocks");
@@ -55,7 +52,7 @@ namespace Voxel
                 {
                     var chunk = new GameObject();
 
-                    chunk.transform.SetParent(this.transform);
+                    chunk.transform.SetParent(transform);
                     chunk.name = $"Chunk {x}:{z}";
                     chunk.transform.position = new Vector3(16 * x, 0, 16 * z);
 
@@ -111,8 +108,9 @@ namespace Voxel
             var localZ = z % 16;
 
             var chunkObject = chunk.GetComponent<Chunk>();
+            
             // DETERMINE BEGIN
-
+            
             int? root = null;
             for (var y = chunkObject.ChunkHeight - 1; y >= 0; y--) {
                 var block = chunkObject.blocks[localX, y, localZ];
