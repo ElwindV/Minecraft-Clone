@@ -1,7 +1,7 @@
 ﻿
 namespace Voxel.Enums
 {
-    public enum Sides
+    public enum Sides : byte
     {
         Top = 0,
         Bottom = 1,

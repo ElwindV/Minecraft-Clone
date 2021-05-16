@@ -118,13 +118,12 @@ namespace Voxel
                         var frontBlock = ((z - 1 >= 0) ? _chunk.blocks[x, y, z - 1]
                             : ((frontChunk != null) ? frontChunk.blocks[x, y, frontChunk.ChunkDepth - 1] : Blocks.Air));
 
-                        HandleRight(ref block, ref rightBlock, ref currentPosition);
-                        HandleLeft(ref block, ref leftBlock, ref currentPosition);
-                        HandleTop(ref block, ref topBlock, ref currentPosition);
-                        if (y != 0)
-                            HandleBottom(ref block, ref bottomBlock, ref currentPosition);
-                        HandleBack(ref block, ref backBlock, ref currentPosition);
-                        HandleFront(ref block, ref frontBlock, ref currentPosition);
+                        AddVertices(ref block, ref rightBlock, ref currentPosition, Sides.Right, Vector3.right);
+                        AddVertices(ref block, ref leftBlock, ref currentPosition, Sides.Left, Vector3.left);
+                        AddVertices(ref block, ref topBlock, ref currentPosition, Sides.Top, Vector3.up);
+                        if (y != 0) AddVertices(ref block, ref bottomBlock, ref currentPosition, Sides.Bottom, Vector3.down);
+                        AddVertices(ref block, ref backBlock, ref currentPosition, Sides.Back, Vector3.forward);
+                        AddVertices(ref block, ref frontBlock, ref currentPosition, Sides.Front, Vector3.back);
                     }
                 }
             }
@@ -142,7 +141,90 @@ namespace Voxel
             waterMesh.normals = _waterNormalList.ToArray();
             waterMesh.uv = _waterUvList.ToArray();
         }
+        
+        private void AddVertices(ref Blocks block, ref Blocks neighborBlock, ref Vector3 currentPosition, Sides side, Vector3 normal)
+        {
+            var blockData = VoxelHandler.instance.blockData[block.ToString()];
+            var neighborBlockData = VoxelHandler.instance.blockData[neighborBlock.ToString()];
 
+            var isVisible = !blockData.transparent && neighborBlockData.transparent || neighborBlock == Blocks.Air;
+
+            if (!isVisible)
+            {
+                return;
+            }
+            
+            if (block == Blocks.Water)
+            {
+                var waterSize = _waterVertexList.Count;
+            
+                var waterDirections = GetDirections(side);
+                foreach (var direction in waterDirections)
+                {
+                    _waterVertexList.Add(currentPosition + direction);
+                }
+
+                AddFaceNormals(Vector3.up, true);
+                AddTriangles(waterSize, true);
+                AddUVs(block, Sides.Top, true);
+            
+                return;
+            }
+            
+            var size = _vertexList.Count;
+            var directions = GetDirections(side);
+            foreach (var direction in directions)
+            {
+                _vertexList.Add(currentPosition + direction);
+            }
+
+            AddFaceNormals(normal);
+            AddTriangles(size);
+            AddUVs(block, side);
+        }
+        
+        private static IEnumerable<Vector3> GetDirections(Sides side)
+        {
+            switch (side)
+            {
+                case Sides.Right:
+                {
+                    Vector3[] rightDirections = { Vector3.right, Vector3.right + Vector3.forward, Vector3.right + Vector3.up, Vector3.right + Vector3.forward + Vector3.up } ;
+                    return rightDirections;
+                }
+                case Sides.Left:
+                {
+                    Vector3[] leftDirections = { Vector3.forward, Vector3.zero, Vector3.forward + Vector3.up, Vector3.up };
+                    return leftDirections;
+                }
+                case Sides.Top:
+                {
+                    Vector3[] topDirections = { Vector3.up, Vector3.up + Vector3.right, Vector3.up + Vector3.forward, Vector3.up + Vector3.right + Vector3.forward};
+                    return topDirections;
+                }
+                case Sides.Bottom:
+                {
+                    Vector3[] bottomDirections = { Vector3.right, Vector3.zero, Vector3.right + Vector3.forward, Vector3.forward };
+                    return bottomDirections;
+                }
+                case Sides.Back:
+                {
+                    Vector3[] backDirections = { Vector3.forward + Vector3.right, Vector3.forward, Vector3.forward + Vector3.right + Vector3.up, Vector3.forward + Vector3.up};
+                    return backDirections;
+                }
+                case Sides.Front:
+                {
+                    Vector3[] frontDirections = { Vector3.zero, Vector3.right, Vector3.up, Vector3.right + Vector3.up};
+                    return frontDirections;
+                }
+                default:
+                {
+                    Vector3[] directions = { };
+                    return directions;
+                }
+            }
+        }
+        
         private void AddFaceNormals(Vector3 direction, bool isWater = false)
         {
             for (short i = 0; i < 4; i++)
@@ -175,7 +257,7 @@ namespace Voxel
                 _triangleList.Add(baseVertexNumber + i);
             }
         }
-
+        
         private void AddUVs(Blocks block, Sides side, bool isWater = false)
         {
             if (isWater)
@@ -202,185 +284,6 @@ namespace Voxel
             _uvList.Add(textureStart + divider * Vector2.right);
             _uvList.Add(textureStart + divider * Vector2.up);
             _uvList.Add(textureStart + divider * Vector2.right + divider * Vector2.up);
-        }
-
-        private void HandleRight(ref Blocks block, ref Blocks rightBlock, ref Vector3 currentPosition)
-        {
-            if (block ==  Blocks.Water)
-            {
-                return;
-            }
-            
-            var blockData = VoxelHandler.instance.blockData[block.ToString()];
-            var rightBlockData = VoxelHandler.instance.blockData[rightBlock.ToString()];
-
-            var isVisible = !blockData.transparent && rightBlockData.transparent || rightBlock == Blocks.Air;
-
-            if (!isVisible)
-            {
-                return;
-            }
-
-            var size = _vertexList.Count;
-            _vertexList.Add(currentPosition + Vector3.right);                                    // + 0
-            _vertexList.Add(currentPosition + Vector3.right + Vector3.forward);                  // + 1
-            _vertexList.Add(currentPosition + Vector3.right + Vector3.up);                       // + 2
-            _vertexList.Add(currentPosition + Vector3.right + Vector3.forward + Vector3.up);     // + 3
-
-            AddFaceNormals(Vector3.right);
-            AddTriangles(size);
-            AddUVs(block, Sides.Right);
-        }
-
-        private void HandleLeft(ref Blocks block, ref Blocks leftBlock, ref Vector3 currentPosition)
-        {
-            if (block ==  Blocks.Water)
-            {
-                return;
-            }
-            
-            var blockData = VoxelHandler.instance.blockData[block.ToString()];
-            var leftBlockData = VoxelHandler.instance.blockData[leftBlock.ToString()];
-
-            var isVisible = !blockData.transparent && leftBlockData.transparent || leftBlock == Blocks.Air;
-
-            if (!isVisible)
-            {
-                return;
-            }
-
-            var size = _vertexList.Count;
-            _vertexList.Add(currentPosition + Vector3.forward);                  // + 0
-            _vertexList.Add(currentPosition);                                    // + 1
-            _vertexList.Add(currentPosition + Vector3.forward + Vector3.up);     // + 2
-            _vertexList.Add(currentPosition + Vector3.up);                       // + 3
-
-            AddFaceNormals(Vector3.left);
-            AddTriangles(size);
-            AddUVs(block, Sides.Left);
-        }
-
-        private void HandleTop(ref Blocks block, ref Blocks topBlock, ref Vector3 currentPosition)
-        {
-            var blockData = VoxelHandler.instance.blockData[block.ToString()];
-            var topBlockData = VoxelHandler.instance.blockData[topBlock.ToString()];
-
-            var isVisible = false || !blockData.transparent && topBlockData.transparent || topBlock == Blocks.Air;
-
-            if (!isVisible)
-            {
-                return;
-            }
-
-            if (block ==  Blocks.Water)
-            {
-                var waterSize = _waterVertexList.Count;
-            
-                _waterVertexList.Add(currentPosition + Vector3.up);                                    // + 0
-                _waterVertexList.Add(currentPosition + Vector3.up + Vector3.right);                    // + 1
-                _waterVertexList.Add(currentPosition + Vector3.up + Vector3.forward);                  // + 2
-                _waterVertexList.Add(currentPosition + Vector3.up + Vector3.right + Vector3.forward);  // + 3
-            
-                AddFaceNormals(Vector3.up, true);
-                AddTriangles(waterSize, true);
-                AddUVs(block, Sides.Top, true);
-            
-                return;
-            }
-        
-            var size = _vertexList.Count;
-            _vertexList.Add(currentPosition + Vector3.up);                                    // + 0
-            _vertexList.Add(currentPosition + Vector3.up + Vector3.right);                    // + 1
-            _vertexList.Add(currentPosition + Vector3.up + Vector3.forward);                  // + 2
-            _vertexList.Add(currentPosition + Vector3.up + Vector3.right + Vector3.forward);  // + 3
-
-            AddFaceNormals(Vector3.up);
-            AddTriangles(size);
-            AddUVs(block, Sides.Top);
-        }
-
-        private void HandleBottom(ref Blocks block, ref Blocks bottomBlock, ref Vector3 currentPosition)
-        {
-            if (block == Blocks.Water)
-            {
-                return;
-            }
-            
-            var blockData = VoxelHandler.instance.blockData[block.ToString()];
-            var bottomBlockData = VoxelHandler.instance.blockData[bottomBlock.ToString()];
-            
-            var isVisible = !blockData.transparent && bottomBlockData.transparent || bottomBlock == Blocks.Air;
-
-            if (!isVisible)
-            {
-                return;
-            }
-
-            var size = _vertexList.Count;
-            _vertexList.Add(currentPosition + Vector3.right);                    // + 0
-            _vertexList.Add(currentPosition);                                    // + 1
-            _vertexList.Add(currentPosition + Vector3.right + Vector3.forward);  // + 2
-            _vertexList.Add(currentPosition + Vector3.forward);                  // + 3
-
-            AddFaceNormals(Vector3.down);
-            AddTriangles(size);
-            AddUVs(block, Sides.Bottom);
-        }
-
-        private void HandleBack(ref Blocks block, ref Blocks backBlock, ref Vector3 currentPosition)
-        {
-            if (block == Blocks.Water)
-            {
-                return;
-            }
-
-            var blockData = VoxelHandler.instance.blockData[block.ToString()];
-            var backBlockData = VoxelHandler.instance.blockData[backBlock.ToString()];
-
-            var isVisible = !blockData.transparent && backBlockData.transparent || backBlock == Blocks.Air;
-            
-            if (!isVisible)
-            {
-                return;
-            }
-
-            var size = _vertexList.Count;
-            _vertexList.Add(currentPosition + Vector3.forward + Vector3.right);                   // + 0
-            _vertexList.Add(currentPosition + Vector3.forward);                                   // + 1
-            _vertexList.Add(currentPosition + Vector3.forward + Vector3.right + Vector3.up);      // + 2
-            _vertexList.Add(currentPosition + Vector3.forward + Vector3.up);                      // + 3
-
-            AddFaceNormals(Vector3.forward);
-            AddTriangles(size);
-            AddUVs(block, Sides.Back);
-        }
-
-        private void HandleFront(ref Blocks block, ref Blocks frontBlock, ref Vector3 currentPosition)
-        {
-            if (block == Blocks.Water)
-            {
-                return;
-            }
-            
-            var blockData = VoxelHandler.instance.blockData[block.ToString()];
-            var frontBlockData = VoxelHandler.instance.blockData[frontBlock.ToString()];
-
-            var isVisible = !blockData.transparent && frontBlockData.transparent || frontBlock == Blocks.Air;
-
-            if (!isVisible)
-            {
-                return;
-            }
-
-            var size = _vertexList.Count;
-            _vertexList.Add(currentPosition);                                          // + 0
-            _vertexList.Add(currentPosition + Vector3.right);                          // + 1
-            _vertexList.Add(currentPosition + Vector3.up);                             // + 2
-            _vertexList.Add(currentPosition + Vector3.right + Vector3.up);             // + 3
-
-            AddFaceNormals(Vector3.back);
-            AddTriangles(size);
-            AddUVs(block, Sides.Front);
         }
     }
 }
