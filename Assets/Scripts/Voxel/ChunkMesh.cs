@@ -194,11 +194,12 @@ namespace Voxel
             }
 
             var blockData = VoxelHandler.instance.blockData[block.ToString()];
-            var texture = (side == Sides.Top)
-                ? blockData.textures.top
-                : (side == Sides.Bottom)
-                    ? blockData.textures.bottom
-                    : blockData.textures.side;
+            var texture = side switch
+            {
+                Sides.Top => blockData.textures.top,
+                Sides.Bottom => blockData.textures.bottom,
+                _ => blockData.textures.side
+            };
             var textureStart = Atlas.uvs[texture];
 
             var divider = 1f / (Atlas.dimensions);

@@ -17,36 +17,36 @@ namespace Voxel
         public Dictionary<string, Block> blockData;
         
         public static VoxelHandler instance = null;
-        
-        private Transform _cameraTransform;
-        private Transform _playerTransform;
-    
-        private readonly Vector3[] _chunkOffsets = new[]
-        {
-            new Vector3(0f, 0f, 0f),
-            new Vector3(16f, 0f, 0f),
-            new Vector3(0f, 32f, 0f),
-            new Vector3(16f, 32f, 0f),
-            new Vector3(0f, 0f, 16f),
-            new Vector3(16f, 0f, 16f),
-            new Vector3(0f, 32f, 16f),
-            new Vector3(16f, 32f, 16f),
-        };
-
-        [Range(-1f, 1f)]
-        public float cutOffThreshold = 0.5f;
-
-        [Range(2f, 100f)]
-        public float cutOffDistance = 4f;
 
         public void Awake()
         {
-            if (Camera.main != null) _cameraTransform = Camera.main.transform;
-            if (Camera.main != null) _playerTransform = Camera.main.transform.parent.transform;
-
             instance = this;
-            gameObject.GetComponent<Atlas>().GenerateAtlas();
+
+            HandleAtlas();
             LoadBlockData();
+            GenerateChunks();
+        }
+
+        private void HandleAtlas()
+        {
+            gameObject.GetComponent<Atlas>().GenerateAtlas();
+        }
+        
+        private void LoadBlockData()
+        {
+            var jsonFile = Resources.Load<TextAsset>("Data/blocks");
+            var blocksContainer = JsonUtility.FromJson<BlockContainer>(jsonFile.text);
+
+            blockData = new Dictionary<string, Block>();
+
+            foreach (var block in blocksContainer.blocks)
+            {
+                blockData[block.name] = block;
+            }
+        }
+
+        private void GenerateChunks()
+        {
             chunks = new GameObject[worldGenerationSettings.chunkCountX, worldGenerationSettings.chunkCountZ];
 
             for (var x = 0; x < chunks.GetLength(0); x++)
@@ -94,58 +94,7 @@ namespace Voxel
             }
         }
 
-        public void Update()
-        {
-            if (_cameraTransform == null || _playerTransform == null)
-            {
-                return;
-            }
-        
-            var forward = _cameraTransform.rotation * Vector3.forward;
-            var playerPosition = _playerTransform.position;
-
-            for (var x = 0; x < chunks.GetLength(0); x++)
-            {
-                for (var z = 0; z < chunks.GetLength(1); z++)
-                {
-                    var chunk = chunks[x, z];
-                    var currentChunkX = Mathf.FloorToInt(playerPosition.x / 16f);
-                    var currentChunkZ = Mathf.FloorToInt(playerPosition.z / 16f);
-    
-                    // If the player is standing on a chunk keep if for collision
-                    if (x == currentChunkX && z == currentChunkZ)
-                    {
-                        chunk.SetActive(true);
-                        continue;
-                    }
-
-                    float chunkGapX = currentChunkX - x;
-                    float chunkGapZ = currentChunkZ - z;
-                    if ((chunkGapX * chunkGapX) + (chunkGapZ * chunkGapZ) > (cutOffDistance * cutOffDistance))
-                    {
-                        chunk.SetActive(false);
-                        continue;
-                    }
-
-                    var isActive = false;
-
-                    for (var i = 0; i < _chunkOffsets.Length; i++)
-                    {
-                        var offset = _chunkOffsets[i];
-                        var relativeChunkCornerPosition = (chunk.transform.position + offset) - playerPosition;
-
-                        if (!(Vector3.Dot(forward.normalized, relativeChunkCornerPosition.normalized) >
-                              cutOffThreshold)) continue;
-                        isActive = true;
-                        break;
-                    }
-
-                    chunk.SetActive(isActive);
-                }
-            }
-        }
-
-        public void PlaceTree(int x, int z, bool updateMeshes = false)
+        private void PlaceTree(int x, int z, bool updateMeshes = false)
         {
             // DETERMINE CHUNK
             var chunkX = x / 16;
@@ -239,19 +188,6 @@ namespace Voxel
             
             if (localZ == 0) chunkMesh?.frontChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
             if (localZ == 15) chunkMesh?.backChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
-        }
-
-        private void LoadBlockData()
-        {
-            var jsonFile = Resources.Load<TextAsset>("Data/blocks");
-            var blocksContainer = JsonUtility.FromJson<BlockContainer>(jsonFile.text);
-
-            blockData = new Dictionary<string, Block>();
-
-            foreach (var block in blocksContainer.blocks)
-            {
-                blockData[block.name] = block;
-            }
         }
     }
 }
