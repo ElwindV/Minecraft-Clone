@@ -23,6 +23,8 @@ namespace Voxel
         [HideInInspector]
         public int z;
 
+        public ChunkMesh Mesh { get; set; }
+
         public void AddSettings(WorldGenerationSettingsSO worldGenerationSettingsSo)
         {
             _settings = worldGenerationSettingsSo;

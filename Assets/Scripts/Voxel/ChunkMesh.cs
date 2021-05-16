@@ -61,16 +61,16 @@ namespace Voxel
             _waterMeshRenderer.sharedMaterial = _waterMaterial;
 
             leftChunk = (_chunk.x - 1 >= 0)
-                ? VoxelHandler.instance.chunks[_chunk.x - 1, _chunk.z].GetComponent<Chunk>()
+                ? VoxelHandler.instance.chunks[_chunk.x - 1, _chunk.z]
                 : null;
             rightChunk = (_chunk.x + 1 < VoxelHandler.instance.chunks.GetLength(0))
-                ? VoxelHandler.instance.chunks[_chunk.x + 1, _chunk.z].GetComponent<Chunk>()
+                ? VoxelHandler.instance.chunks[_chunk.x + 1, _chunk.z]
                 : null;
             backChunk = (_chunk.z + 1 < VoxelHandler.instance.chunks.GetLength(1))
-                ? VoxelHandler.instance.chunks[_chunk.x, _chunk.z + 1].GetComponent<Chunk>()
+                ? VoxelHandler.instance.chunks[_chunk.x, _chunk.z + 1]
                 : null;
             frontChunk = (_chunk.z - 1 >= 0)
-                ? VoxelHandler.instance.chunks[_chunk.x, _chunk.z - 1].GetComponent<Chunk>()
+                ? VoxelHandler.instance.chunks[_chunk.x, _chunk.z - 1]
                 : null;
         }
 

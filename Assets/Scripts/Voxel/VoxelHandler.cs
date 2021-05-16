@@ -11,7 +11,7 @@ namespace Voxel
         public WorldGenerationSettingsSO worldGenerationSettings;
 
         [HideInInspector]
-        public GameObject[,] chunks = new GameObject[0, 0];
+        public Chunk[,] chunks = new Chunk[0, 0];
 
         [HideInInspector]
         public Dictionary<string, JsonBlock> blockData;
@@ -44,7 +44,7 @@ namespace Voxel
 
         private void GenerateChunks()
         {
-            chunks = new GameObject[worldGenerationSettings.chunkCountX, worldGenerationSettings.chunkCountZ];
+            chunks = new Chunk[worldGenerationSettings.chunkCountX, worldGenerationSettings.chunkCountZ];
 
             for (var x = 0; x < chunks.GetLength(0); x++)
             {
@@ -61,8 +61,10 @@ namespace Voxel
                     chunkComponent.z = z;
                     chunkComponent.AddSettings(worldGenerationSettings);
                     chunkComponent.Generate();
+                    
+                    chunkComponent.Mesh = chunk.AddComponent<ChunkMesh>();
 
-                    chunks[x, z] = chunk;
+                    chunks[x, z] = chunkComponent;
                 }
             }
 
@@ -84,7 +86,7 @@ namespace Voxel
             {
                 for (var z = 0; z < chunks.GetLength(1); z++)
                 {
-                    var chunkMesh = chunks[x, z].AddComponent<ChunkMesh>();
+                    var chunkMesh = chunks[x, z].Mesh;
                     chunkMesh.Setup();
                     chunkMesh.Refresh();
                 }
@@ -102,13 +104,11 @@ namespace Voxel
                 return;
             }
 
-            var chunk = chunks[chunkX, chunkZ];
+            var chunkObject = chunks[chunkX, chunkZ];
 
             var localX = x % 16;
             var localZ = z % 16;
 
-            var chunkObject = chunk.GetComponent<Chunk>();
-            
             // DETERMINE BEGIN
             
             int? root = null;
@@ -169,7 +169,7 @@ namespace Voxel
             var localZ = z % 16;
 
             // REMOVE BLOCK
-            chunk.GetComponent<Chunk>().blocks[localX, y, localZ] = block;
+            chunk.blocks[localX, y, localZ] = block;
 
             if (!updateMeshes)
             {
@@ -177,15 +177,15 @@ namespace Voxel
             }
 
             // UPDATE MESH
-            var chunkMesh = chunk.GetComponent<ChunkMesh>();
+            var chunkMesh = chunk.Mesh;
             chunkMesh.Refresh();
 
             // UPDATE NEIGHBOURS
-            if (localX == 0) chunkMesh?.leftChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
-            if (localX == 15) chunkMesh?.rightChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
+            if (localX == 0) chunkMesh.leftChunk?.Mesh.Refresh();
+            if (localX == 15) chunkMesh.rightChunk?.Mesh.Refresh();
             
-            if (localZ == 0) chunkMesh?.frontChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
-            if (localZ == 15) chunkMesh?.backChunk?.gameObject?.GetComponent<ChunkMesh>()?.Refresh();
+            if (localZ == 0) chunkMesh.frontChunk?.Mesh.Refresh();
+            if (localZ == 15) chunkMesh.backChunk?.Mesh.Refresh();
         }
     }
 }
