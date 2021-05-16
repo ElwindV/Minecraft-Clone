@@ -187,9 +187,9 @@ namespace Voxel
                     Vector3[] rightDirections =
                     {
                         new Vector3(1, 0, 0), 
-                        new Vector3(1, 0 , 1), 
-                        new Vector3(1, 1 , 0), 
-                        new Vector3(1, 1 , 1)
+                        new Vector3(1, 0, 1), 
+                        new Vector3(1, 1, 0), 
+                        new Vector3(1, 1, 1)
                     };
                     return rightDirections;
                 }
