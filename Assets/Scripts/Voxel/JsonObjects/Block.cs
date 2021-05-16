@@ -7,7 +7,7 @@ namespace Voxel.JsonObjects
     {
         public int id;
         public string name;
-        public bool transparant;
+        public bool transparent;
 
         public TextureMap textures;
     }

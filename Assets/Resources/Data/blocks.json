@@ -3,7 +3,7 @@
         {
             "id": 0,
             "name": "Air",
-            "transparant": true,
+            "transparent": true,
             "textures": {
                 "top": null,
                 "side": null,
@@ -13,7 +13,7 @@
         {
             "id": 1,
             "name": "Stone",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "stone",
                 "side": "stone",
@@ -23,7 +23,7 @@
         {
             "id": 2,
             "name": "Dirt",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "dirt",
                 "side": "dirt",
@@ -33,7 +33,7 @@
         {
             "id": 3,
             "name": "Grass",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "grass-top",
                 "side": "grass-side",
@@ -43,7 +43,7 @@
         {
             "id": 4,
             "name": "Bedrock",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "bedrock",
                 "side": "bedrock",
@@ -53,7 +53,7 @@
         {
             "id": 5,
             "name": "Log",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "log-top",
                 "side": "log-side",
@@ -63,7 +63,7 @@
         {
             "id": 6,
             "name": "Leaf",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "leaf",
                 "side": "leaf",
@@ -73,7 +73,7 @@
         {
             "id": 7,
             "name": "Wood",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "wood",
                 "side": "wood",
@@ -83,7 +83,7 @@
         {
             "id": 8,
             "name": "Water",
-            "transparant": true,
+            "transparent": true,
             "textures": {
                 "top": "water",
                 "side": "water",
@@ -93,7 +93,7 @@
         {
             "id": 9,
             "name": "Sand",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "sand",
                 "side": "sand",
@@ -103,7 +103,7 @@
         {
             "id": 10,
             "name": "Snow",
-            "transparant": false,
+            "transparent": false,
             "textures": {
                 "top": "snow",
                 "side": "snow",

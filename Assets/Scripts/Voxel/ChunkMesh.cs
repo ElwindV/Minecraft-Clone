@@ -218,7 +218,7 @@ namespace Voxel
             var blockData = VoxelHandler.instance.blockData[block.ToString()];
             var rightBlockData = VoxelHandler.instance.blockData[rightBlock.ToString()];
 
-            var isVisible = !blockData.transparant && rightBlockData.transparant || rightBlock == Blocks.Air;
+            var isVisible = !blockData.transparent && rightBlockData.transparent || rightBlock == Blocks.Air;
 
             if (!isVisible)
             {
@@ -246,7 +246,7 @@ namespace Voxel
             var blockData = VoxelHandler.instance.blockData[block.ToString()];
             var leftBlockData = VoxelHandler.instance.blockData[leftBlock.ToString()];
 
-            var isVisible = !blockData.transparant && leftBlockData.transparant || leftBlock == Blocks.Air;
+            var isVisible = !blockData.transparent && leftBlockData.transparent || leftBlock == Blocks.Air;
 
             if (!isVisible)
             {
@@ -269,7 +269,7 @@ namespace Voxel
             var blockData = VoxelHandler.instance.blockData[block.ToString()];
             var topBlockData = VoxelHandler.instance.blockData[topBlock.ToString()];
 
-            var isVisible = false || !blockData.transparant && topBlockData.transparant || topBlock == Blocks.Air;
+            var isVisible = false || !blockData.transparent && topBlockData.transparent || topBlock == Blocks.Air;
 
             if (!isVisible)
             {
@@ -313,7 +313,7 @@ namespace Voxel
             var blockData = VoxelHandler.instance.blockData[block.ToString()];
             var bottomBlockData = VoxelHandler.instance.blockData[bottomBlock.ToString()];
             
-            var isVisible = !blockData.transparant && bottomBlockData.transparant || bottomBlock == Blocks.Air;
+            var isVisible = !blockData.transparent && bottomBlockData.transparent || bottomBlock == Blocks.Air;
 
             if (!isVisible)
             {
@@ -341,7 +341,7 @@ namespace Voxel
             var blockData = VoxelHandler.instance.blockData[block.ToString()];
             var backBlockData = VoxelHandler.instance.blockData[backBlock.ToString()];
 
-            var isVisible = !blockData.transparant && backBlockData.transparant || backBlock == Blocks.Air;
+            var isVisible = !blockData.transparent && backBlockData.transparent || backBlock == Blocks.Air;
             
             if (!isVisible)
             {
@@ -369,7 +369,7 @@ namespace Voxel
             var blockData = VoxelHandler.instance.blockData[block.ToString()];
             var frontBlockData = VoxelHandler.instance.blockData[frontBlock.ToString()];
 
-            var isVisible = !blockData.transparant && frontBlockData.transparant || frontBlock == Blocks.Air;
+            var isVisible = !blockData.transparent && frontBlockData.transparent || frontBlock == Blocks.Air;
 
             if (!isVisible)
             {
